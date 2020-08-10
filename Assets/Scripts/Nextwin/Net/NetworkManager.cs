@@ -48,7 +48,7 @@ namespace Nextwin
                 _socket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 _socket.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), _socket);
                 _connectDone.WaitOne();
-                Debug.Log(_socket.GetHashCode() + " 서버 접속");
+                Debug.Log("Socket connected to " + _socket.RemoteEndPoint.ToString());
             }
 
             private void ConnectCallback(IAsyncResult ar)
@@ -57,7 +57,6 @@ namespace Nextwin
                 {
                     Socket socket = (Socket)ar.AsyncState;
                     socket.EndConnect(ar);
-                    Debug.Log("Socket connected to " + socket.RemoteEndPoint.ToString());
                     _connectDone.Set();
                 }
                 catch(Exception e)
@@ -66,30 +65,25 @@ namespace Nextwin
                 }
             }
 
-            public void Send(int test)
-            {
-                //byte[] data = BitConverter.GetBytes(test);
-                //_socket.Send(data);
-                TestProtocol obj = new TestProtocol(test, test.ToString() + "frame");
-                byte[] data = JsonManager.ObjectToBytes(obj);
-                try
-                {
-                    _socket.Send(data);
-                }
-                catch(Exception)
-                {
-                    Debug.Log("연결되지 않음");
-                }
-            }
-
             /// <summary>
             /// 구조체 전송
             /// </summary>
             /// <typeparam name="T"></typeparam>
-            /// <param name="obj"></param>
-            public void Send<T>(T obj)
+            /// <param name="msgType"></param>
+            /// <param name="obj"></param>            
+            public void Send<T>(int msgType, T obj)
             {
-                
+                byte[] data = JsonManager.ObjectToBytes(obj);
+
+                Header header = new Header(msgType, data.Length);
+                byte[] head = JsonManager.ObjectToBytes(header);
+
+                // 최종 전송할 패킷(헤더 + 데이터) 바이트화
+                byte[] packet = new byte[head.Length + data.Length];
+                Buffer.BlockCopy(head, 0, packet, 0, head.Length);
+                Buffer.BlockCopy(data, 0, packet, head.Length, data.Length);
+
+                _socket.Send(packet, packet.Length, SocketFlags.None);
             }
 
             /// <summary>
@@ -98,10 +92,9 @@ namespace Nextwin
             public void Disconnect()
             {
                 _socket.Close();
-                //_socket.Shutdown(SocketShutdown.Both);
-                //_socket.Disconnect(true);
             }
 
+            [Obsolete]
             private void DisconnectCallback(IAsyncResult ar)
             {
                 Socket socket = (Socket)ar.AsyncState;

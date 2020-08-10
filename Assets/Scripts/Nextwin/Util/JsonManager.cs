@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Nextwin.Protocol;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -17,6 +18,18 @@ namespace Nextwin
             public static byte[] ObjectToBytes(object obj)
             {
                 return JsonToBytes(ObjectToJson(obj));
+            }
+
+            /// <summary>
+            /// 헤더를 바이트 배열로 변환
+            /// </summary>
+            /// <param name="header"></param>
+            /// <returns></returns>
+            public static byte[] ObjectToBytes(Header header)
+            {
+                string json = ObjectToJson(header);
+                SetHeaderLength(header, ref json);
+                return JsonToBytes(json);
             }
 
             /// <summary>
@@ -53,14 +66,18 @@ namespace Nextwin
                 return jsonPascal;
             }
 
-            //// 헤더의 json 길이를 26으로 맞춰주기 위함
-            //public static void SetHeaderLength(Packet.Header header, ref string jsonHeader)
-            //{
-            //    if(header.MsgType < 10)
-            //        jsonHeader += ' ';
-            //    if(header.Length < 10)
-            //        jsonHeader += ' ';
-            //}
+            /// <summary>
+            /// 헤더의 json 길이를 26으로 맞춤
+            /// </summary>
+            /// <param name="header"></param>
+            /// <param name="jsonHeader"></param>
+            public static void SetHeaderLength(Header header, ref string jsonHeader)
+            {
+                if(header.MsgType < 10)
+                    jsonHeader += ' ';
+                if(header.Length < 10)
+                    jsonHeader += ' ';
+            }
 
             /// <summary>
             /// C# 명명 규칙 -> JAVA 명명 규칙

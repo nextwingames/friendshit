@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Nextwin.Net;
+using Nextwin.Protocol;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,7 +23,10 @@ public class GameManager : MonoBehaviour
     {
         _frame++;
         if(_frame % 300 == 20)
-            _networkManager.Send(_frame);
+        {
+            TestPacket packet = new TestPacket(_frame, "str : " + _frame.ToString());
+            _networkManager.Send(Protocol.Test, packet);
+        }
     }
 
     private void OnApplicationQuit()
