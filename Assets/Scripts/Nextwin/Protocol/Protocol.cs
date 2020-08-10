@@ -7,6 +7,7 @@
         /// </summary>
         public class Protocol
         {
+            public const int HeaderLength = 26;
             public const int Test = 99;
         }
     }

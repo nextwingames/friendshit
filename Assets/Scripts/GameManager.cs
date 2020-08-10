@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Nextwin.Net;
 using Nextwin.Protocol;
+using Nextwin.Util;
+using FriendShit;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,6 +28,23 @@ public class GameManager : MonoBehaviour
         {
             TestPacket packet = new TestPacket(_frame, "str : " + _frame.ToString());
             _networkManager.Send(Protocol.Test, packet);
+            Services();
+        }
+    }
+
+    private void Services()
+    {
+        Header header = _networkManager.Receive();
+        byte[] data = _networkManager.Receive(header.Length);
+
+        Service service;
+        switch(header.MsgType)
+        {
+            case Protocol.Test:
+                TestPacket testPacket = JsonManager.BytesToObject<TestPacket>(data);
+                service = new TestService(testPacket);
+                service.Execute();
+                break;
         }
     }
 

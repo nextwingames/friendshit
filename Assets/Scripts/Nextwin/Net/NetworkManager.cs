@@ -87,6 +87,31 @@ namespace Nextwin
             }
 
             /// <summary>
+            /// 헤더 수신
+            /// </summary>
+            /// <returns></returns>
+            public Header Receive()
+            {
+                byte[] head = new byte[Protocol.Protocol.HeaderLength];
+                _socket.Receive(head, Protocol.Protocol.HeaderLength, SocketFlags.None);
+
+                Header header = JsonManager.BytesToObject<Header>(head);
+                return header;
+            }
+
+            /// <summary>
+            /// 데이터 수신
+            /// </summary>
+            /// <param name="length"></param>
+            /// <returns></returns>
+            public byte[] Receive(int length)
+            {
+                byte[] data = new byte[length];
+                _socket.Receive(data, length, SocketFlags.None);
+                return data;
+            }
+
+            /// <summary>
             /// 연결 해제
             /// </summary>
             public void Disconnect()
