@@ -3,20 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace FriendShit
+namespace Friendshit
 {
-    public class TestService : Service
+    namespace Service
     {
-        private TestPacket _testPacket;
-
-        public TestService(TestPacket testPacket)
+        public class TestService : Service
         {
-            _testPacket = testPacket;
-        }
+            private TestPacket _testPacket;
 
-        public override void Execute()
-        {
-            Debug.Log("Data " + _testPacket.Data + ", Str " + _testPacket.Str);
+            public TestService(TestPacket testPacket)
+            {
+                _testPacket = testPacket;
+            }
+
+            public override void Execute()
+            {
+                Debug.Log("Data " + _testPacket.Data + ", Str " + _testPacket.Str);
+            }
         }
     }
 }

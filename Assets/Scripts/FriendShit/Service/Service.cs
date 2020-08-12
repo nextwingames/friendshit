@@ -3,17 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace FriendShit
+namespace Friendshit
 {
-    public abstract class Service
+    namespace Service
     {
-        protected NetworkManager _networkManager;
-
-        protected Service()
+        public abstract class Service
         {
-            _networkManager = NetworkManager.Instance;
-        }
+            protected NetworkManager _networkManager;
 
-        public abstract void Execute();
+            protected Service()
+            {
+                _networkManager = NetworkManager.Instance;
+            }
+
+            public abstract void Execute();
+        }
     }
 }

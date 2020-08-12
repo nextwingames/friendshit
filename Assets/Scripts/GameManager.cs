@@ -4,7 +4,7 @@ using UnityEngine;
 using Nextwin.Net;
 using Nextwin.Protocol;
 using Nextwin.Util;
-using FriendShit;
+using Friendshit.Service;
 
 public class GameManager : MonoBehaviour
 {
@@ -28,11 +28,11 @@ public class GameManager : MonoBehaviour
         {
             TestPacket packet = new TestPacket(_frame, "str : " + _frame.ToString());
             _networkManager.Send(Protocol.Test, packet);
-            Services();
+            Service();
         }
     }
 
-    private void Services()
+    private void Service()
     {
         Header header = _networkManager.Receive();
         byte[] data = _networkManager.Receive(header.Length);
