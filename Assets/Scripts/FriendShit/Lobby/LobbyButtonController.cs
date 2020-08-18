@@ -27,6 +27,21 @@ namespace Friendshit
             {
 
             }
+
+            public void OnClickLogin()
+            {
+
+            }
+
+            public void OnClickRegister()
+            {
+                GameObject.Find("Register Panel").GetComponent<Animator>().Play("Open");
+            }
+
+            public void OnClickRegisterComplete()
+            {
+                GameObject.Find("Register Panel").GetComponent<Animator>().Play("Close");
+            }
         }
     }
 }
