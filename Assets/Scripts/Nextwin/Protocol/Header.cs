@@ -7,6 +7,8 @@
         /// </summary>
         public class Header
         {
+            public static int HeaderLength;
+
             public int MsgType;
             public int Length;
 

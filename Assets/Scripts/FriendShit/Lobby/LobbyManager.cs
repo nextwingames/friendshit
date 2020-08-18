@@ -1,9 +1,12 @@
-﻿using System.Collections;
+﻿using Nextwin.Net;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class LobbyManager : MonoBehaviour
 {
+    private NetworkManager _networkManager;
+
     [SerializeField]
     private GameObject _logoPanel;
     [SerializeField]
@@ -12,7 +15,7 @@ public class LobbyManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        _networkManager = NetworkManager.Instance;
     }
 
     // Update is called once per frame

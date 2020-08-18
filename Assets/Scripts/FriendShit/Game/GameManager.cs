@@ -4,6 +4,7 @@ using UnityEngine;
 using Nextwin.Net;
 using Nextwin.Protocol;
 using Nextwin.Util;
+using Friendshit.Protocol;
 using Friendshit.Service;
 
 public class GameManager : MonoBehaviour
@@ -27,7 +28,7 @@ public class GameManager : MonoBehaviour
         if(_frame % 300 == 20)
         {
             TestPacket packet = new TestPacket(_frame, "str : " + _frame.ToString());
-            _networkManager.Send(Protocol.Test, packet);
+            _networkManager.Send(Protocols.Test, packet);
             Service();
         }
     }
@@ -40,7 +41,7 @@ public class GameManager : MonoBehaviour
         Service service;
         switch(header.MsgType)
         {
-            case Protocol.Test:
+            case Protocols.Test:
                 TestPacket testPacket = JsonManager.BytesToObject<TestPacket>(data);
                 service = new TestService(testPacket);
                 service.Execute();

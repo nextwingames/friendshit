@@ -92,8 +92,8 @@ namespace Nextwin
             /// <returns></returns>
             public Header Receive()
             {
-                byte[] head = new byte[Protocol.Protocol.HeaderLength];
-                _socket.Receive(head, Protocol.Protocol.HeaderLength, SocketFlags.None);
+                byte[] head = new byte[Header.HeaderLength];
+                _socket.Receive(head, Header.HeaderLength, SocketFlags.None);
 
                 Header header = JsonManager.BytesToObject<Header>(head);
                 return header;
