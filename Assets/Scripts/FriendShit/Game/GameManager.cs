@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     {
         _networkManager = NetworkManager.Instance;
         // 서버 없이 확인 시 아래 Connect문 주석
-        _networkManager.Connect();
+        _networkManager.Connect(9000);
     }
 
     // Update is called once per frame

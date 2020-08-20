@@ -15,7 +15,6 @@ namespace Nextwin
     {
         public class NetworkManager
         {
-            private const int Port = 8899;
             private const string Ip = "127.0.0.1";
             private Socket _socket;
 
@@ -40,10 +39,10 @@ namespace Nextwin
             /// <summary>
             /// 비동기 연결
             /// </summary>
-            public void Connect()
+            public void Connect(int port)
             {
                 IPAddress ipAddress = IPAddress.Parse(Ip);
-                IPEndPoint remoteEP = new IPEndPoint(ipAddress, Port);
+                IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
 
                 _socket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 _socket.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), _socket);

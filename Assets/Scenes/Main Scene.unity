@@ -2939,7 +2939,7 @@ GameObject:
   - component: {fileID: 1658195194}
   - component: {fileID: 1658195196}
   m_Layer: 5
-  m_Name: Select Mode Panel
+  m_Name: Select Server Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
