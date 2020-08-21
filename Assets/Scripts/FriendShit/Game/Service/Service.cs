@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Friendshit
 {
-    namespace Service
+    namespace Game
     {
         public abstract class Service
         {

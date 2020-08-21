@@ -15,6 +15,23 @@ namespace Nextwin
     {
         public class NetworkManager
         {
+            private static int _mainPort = 8899;
+            private static int _localPort = 8890;
+            public static int _gamePort = 9000;
+            public static int MainPort
+            {
+                get { return _mainPort; }
+            }
+            public static int LocalPort
+            {
+                get { return _localPort; }
+            }
+            public static int GamePort
+            {
+                get { return _gamePort; }
+                set { _gamePort = value; }
+            }
+
             private const string Ip = "127.0.0.1";
             private Socket _socket;
 

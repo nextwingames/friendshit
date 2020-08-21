@@ -1,34 +1,19 @@
-﻿using Friendshit.Protocol;
-using Nextwin.Net;
-using System;
+﻿using Nextwin.Net;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Friendshit
 {
-    namespace Button
+    namespace MainServer
     {
-        public class LobbyButtonController : MonoBehaviour
+        public class ButtonController : MonoBehaviour
         {
             private NetworkManager _networkManager;
 
             private void Start()
             {
                 _networkManager = NetworkManager.Instance;
-            }
-
-            public void OnClickPlayOnServer()
-            {
-                _networkManager.Connect(8899);
-                GameObject.Find("Select Server Panel").GetComponent<Animator>().Play("Destroy");
-            }
-
-            public void OnClickPlayOnLocalServer()
-            {
-                GameObject.Find("Select Server Panel").GetComponent<Animator>().Play("Destroy");
-                GameObject.Find("Login Panel").SetActive(false);
-                GameObject.Find("Register Panel").SetActive(false);
             }
 
             public void OnClickLogin()
