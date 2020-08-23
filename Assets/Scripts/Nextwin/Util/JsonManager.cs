@@ -117,6 +117,7 @@ namespace Nextwin
             /// <returns></returns>
             private static string RenameToPascalCase(string json)
             {
+                Debug.Log("json before " + json);
                 string pascalJson = "";
 
                 int length = json.Length;
@@ -132,7 +133,7 @@ namespace Nextwin
 
                     if(json[i] == '\"')
                     {
-                        if(json[i + 1] != ':')
+                        if(json[i + 1] != ':' && json[i - 1] != ':')
                         {
                             // 필드 변수 첫 글자를 대문자로
                             pascalJson += char.ToUpper(json[i + 1]);
@@ -141,6 +142,7 @@ namespace Nextwin
                     }
                 }
 
+                Debug.Log("json after " + pascalJson);
                 return pascalJson;
             }
         }
