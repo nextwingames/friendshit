@@ -4,7 +4,8 @@ using UnityEngine;
 using Nextwin.Net;
 using Nextwin.Protocol;
 using Nextwin.Util;
-using Friendshit.Protocol;
+using Friendshit.Protocols;
+using Friendshit.Services;
 
 namespace Friendshit
 {
@@ -31,12 +32,12 @@ namespace Friendshit
                 if(_frame % 300 == 20)
                 {
                     TestPacket packet = new TestPacket(_frame, "str : " + _frame.ToString());
-                    _networkManager.Send(Protocols.Test, packet);
-                    Service();
+                    _networkManager.Send(Protocol.Test, packet);
+                    Run();
                 }
             }
 
-            private void Service()
+            private void Run()
             {
                 Header header = _networkManager.Receive();
                 byte[] data = _networkManager.Receive(header.Length);
@@ -44,7 +45,7 @@ namespace Friendshit
                 Service service;
                 switch(header.MsgType)
                 {
-                    case Protocols.Test:
+                    case Protocol.Test:
                         TestPacket testPacket = JsonManager.BytesToObject<TestPacket>(data);
                         service = new TestService(testPacket);
                         service.Execute();

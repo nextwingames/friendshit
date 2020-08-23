@@ -8,6 +8,8 @@ using System.Threading;
 using TMPro;
 using Nextwin.Protocol;
 using Nextwin.Util;
+using System.Text;
+using UnityEngine.Apple.TV;
 
 namespace Nextwin
 {
@@ -34,11 +36,11 @@ namespace Nextwin
 
             private const string Ip = "127.0.0.1";
             private Socket _socket;
-
-            private ManualResetEvent _connectDone = new ManualResetEvent(false);
-            private ManualResetEvent _sendDone = new ManualResetEvent(false);
-            private ManualResetEvent _receiveDone = new ManualResetEvent(false);
-            private ManualResetEvent _disconnectDone = new ManualResetEvent(false);
+            
+            public bool IsConnected
+            {
+                get { return _socket.Connected; }
+            }
 
             private static NetworkManager _instance;
             public static NetworkManager Instance
@@ -54,7 +56,7 @@ namespace Nextwin
             private NetworkManager() { }
 
             /// <summary>
-            /// 비동기 연결
+            /// 서버에 연결
             /// </summary>
             public void Connect(int port)
             {
@@ -62,23 +64,8 @@ namespace Nextwin
                 IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
 
                 _socket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                _socket.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), _socket);
-                _connectDone.WaitOne();
+                _socket.Connect(remoteEP);
                 Debug.Log("Socket connected to " + _socket.RemoteEndPoint.ToString());
-            }
-
-            private void ConnectCallback(IAsyncResult ar)
-            {
-                try
-                {
-                    Socket socket = (Socket)ar.AsyncState;
-                    socket.EndConnect(ar);
-                    _connectDone.Set();
-                }
-                catch(Exception e)
-                {
-                    Debug.Log(e);
-                }
             }
 
             /// <summary>
@@ -99,6 +86,7 @@ namespace Nextwin
                 Buffer.BlockCopy(head, 0, packet, 0, head.Length);
                 Buffer.BlockCopy(data, 0, packet, head.Length, data.Length);
 
+               // _socket.BeginSend(packet, 0, packet.Length, 0, new AsyncCallback(SendCallback), _socket);
                 _socket.Send(packet, packet.Length, SocketFlags.None);
             }
 
@@ -133,15 +121,6 @@ namespace Nextwin
             public void Disconnect()
             {
                 _socket.Close();
-            }
-
-            [Obsolete]
-            private void DisconnectCallback(IAsyncResult ar)
-            {
-                Socket socket = (Socket)ar.AsyncState;
-                socket.EndDisconnect(ar);
-                Debug.Log("Socket disconnected");
-                _disconnectDone.Set();
             }
         }
     }
