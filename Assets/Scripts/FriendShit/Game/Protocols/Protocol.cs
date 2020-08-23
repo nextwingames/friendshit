@@ -1,8 +1,8 @@
 ﻿namespace Friendshit
 {
-    namespace Protocol
+    namespace Protocols
     {
-        public partial class Protocols
+        public partial class Protocol
         {
     
         }
