@@ -117,7 +117,6 @@ namespace Nextwin
             /// <returns></returns>
             private static string RenameToPascalCase(string json)
             {
-                Debug.Log("json before " + json);
                 string pascalJson = "";
 
                 int length = json.Length;
@@ -142,7 +141,6 @@ namespace Nextwin
                     }
                 }
 
-                Debug.Log("json after " + pascalJson);
                 return pascalJson;
             }
         }

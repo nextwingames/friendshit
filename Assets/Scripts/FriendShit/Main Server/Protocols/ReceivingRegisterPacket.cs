@@ -4,7 +4,7 @@
     {
         public class ReceivingRegisterPacket
         {
-            public bool IsSuccess;
+            public int Result;
             public string Id;
         }
     }

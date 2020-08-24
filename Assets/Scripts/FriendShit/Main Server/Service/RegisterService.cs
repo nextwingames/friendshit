@@ -1,5 +1,7 @@
-﻿using Friendshit.Protocols;
+﻿using Friendshit.MainServer;
+using Friendshit.Protocols;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Friendshit
 {
@@ -7,26 +9,62 @@ namespace Friendshit
     {
         public class RegisterService:Service
         {
-            private ReceivingRegisterPacket _packet;
+            private const int RegisterFailNickname = 0;
+            private const int RegisterFailId = -1;
+            private const int RegisterSuccess = 1;
+
+            private ReceivingRegisterPacket _receivingRegisterPacket;
+
+            // 경고 창
+            private Animator _alertAnimator;
+            private Text _alertMessage;
+
+            // 회원가입
+            private InputField _inputNickname;
+            private InputField _inputRegId;
+            private InputField _inputRegPw;
+            private InputField _inputRegPwConfirm;
+            private InputField _inputMail;
 
             public RegisterService(ReceivingRegisterPacket packet)
             {
-                _packet = packet;
+                _receivingRegisterPacket = packet;
+
+                _alertAnimator = GameObject.Find("Alert Panel").GetComponent<Animator>();
+                _alertMessage = GameObject.Find("Alert Message").GetComponent<Text>();
+
+                _inputNickname = GameObject.Find("Nickname InputField").GetComponent<InputField>();
+                _inputRegId = GameObject.Find("Reg ID InputField").GetComponent<InputField>();
+                _inputRegPw = GameObject.Find("Reg PW InputField").GetComponent<InputField>();
+                _inputRegPwConfirm = GameObject.Find("Reg PW Confirm InputField").GetComponent<InputField>();
+                _inputMail = GameObject.Find("Mail InputField").GetComponent<InputField>();
             }
 
             public override void Execute()
             {
-                // 회원가입 실패
-                if(!_packet.IsSuccess)
+                switch(_receivingRegisterPacket.Result)
                 {
-                    // 이미 존재하는 아이디입니다 알림창
-                    Debug.Log("이미 존재하는 아이디이거나 닉네임입니다.");
-                    return;
-                }
+                    case RegisterFailNickname:
+                        _alertMessage.text = "The Nickname is already in use.\nPlease enter another nickname.";
+                        ButtonController.Focus = ButtonController.FocusNickname;
+                        break;
 
-                // 회원가입 성공 알림창
-                Debug.Log("환영합니다. " + _packet.Id + "님");
-                GameObject.Find("Register Panel").GetComponent<Animator>().Play("Close");
+                    case RegisterFailId:
+                        _alertMessage.text = "The ID is already in use.\nPlease enter another ID.";
+                        ButtonController.Focus = ButtonController.FocusRegId;
+                        break;
+
+                    case RegisterSuccess:
+                        _alertMessage.text = "Registered successfully!\nYour ID is " + _receivingRegisterPacket.Id + ".";
+                        GameObject.Find("Register Panel").GetComponent<Animator>().Play("Close");
+                        _inputNickname.text = "";
+                        _inputRegId.text = "";
+                        _inputRegPw.text = "";
+                        _inputRegPwConfirm.text = "";
+                        _inputMail.text = "";
+                        break;
+                }
+                _alertAnimator.Play("Open");
             }
         }
     }

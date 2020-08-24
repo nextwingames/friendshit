@@ -48,12 +48,15 @@ namespace Friendshit
             /// </summary>
             private void Run()
             {
-                Header header = _networkManager.Receive();
-                byte[] data = _networkManager.Receive(header.Length);
-                OriginPacket originPacket = new OriginPacket(header, data);
-                lock(_locker)
+                while(_networkManager.IsConnected)
                 {
-                    _serviceQueue.Enqueue(originPacket);
+                    Header header = _networkManager.Receive();
+                    byte[] data = _networkManager.Receive(header.Length);
+                    OriginPacket originPacket = new OriginPacket(header, data);
+                    lock(_locker)
+                    {
+                        _serviceQueue.Enqueue(originPacket);
+                    }
                 }
             }
 
@@ -81,6 +84,12 @@ namespace Friendshit
                         service.Execute();
                         break;
                 }
+            }
+
+            private void OnApplicationQuit()
+            {
+                _networkManager.Disconnect();
+                _networkThread.Join();
             }
         }
     }
