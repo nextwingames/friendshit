@@ -8,6 +8,7 @@ using UnityEngine;
 using Friendshit.Services;
 using Friendshit.Protocols;
 using Nextwin.Util;
+using UnityEngine.UI;
 
 namespace Friendshit
 {
@@ -15,16 +16,38 @@ namespace Friendshit
     {
         public class MainServerManager:MonoBehaviour
         {
+            public static PlayerInformation PlayerInformation { get; set; }
+
             private NetworkManager _networkManager;
             private Thread _networkThread;
             private Queue<OriginPacket> _serviceQueue = new Queue<OriginPacket>();
             private object _locker = new object();
+
+            // 회원가입
+            [SerializeField]
+            private InputField _inputNickname;
+            [SerializeField]
+            private InputField _inputRegId;
+            [SerializeField]
+            private InputField _inputRegPw;
+            [SerializeField]
+            private InputField _inputRegPwConfirm;
+            [SerializeField]
+            private InputField _inputMail;
+
+            // 로그인
+            [SerializeField]
+            private InputField _inputId;
+            [SerializeField]
+            private InputField _inputPw;
 
             // Start is called before the first frame update
             void Start()
             {
                 _networkManager = NetworkManager.Instance;
                 _networkManager.Connect(NetworkManager.MainPort);
+
+                _inputId.ActivateInputField();
             }
 
             // Update is called once per frame
@@ -41,6 +64,7 @@ namespace Friendshit
                 }
 
                 Service();
+                ChangeFocus();
             }
 
             /// <summary>
@@ -76,13 +100,55 @@ namespace Friendshit
                 byte[] data = originPacket.Data;
 
                 Service service;
+                Packet packet;
                 switch(header.MsgType)
                 {
                     case Protocol.Register:
-                        ReceivingRegisterPacket packet = JsonManager.BytesToObject<ReceivingRegisterPacket>(data);
+                        packet = JsonManager.BytesToObject<ReceivingRegisterPacket>(data);
                         service = new RegisterService(packet);
                         service.Execute();
                         break;
+
+                    case Protocol.Login:
+                        packet = JsonManager.BytesToObject<ReceivingLoginPacket>(data);
+                        service = new LoginService(packet);
+                        service.Execute();
+                        break;
+                }
+            }
+
+            private void ChangeFocus()
+            {
+                if(!Input.GetKeyDown(KeyCode.Tab))
+                    return;
+
+                // 역방향
+                if(Input.GetKey(KeyCode.LeftShift))
+                {
+                    if(_inputRegId.isFocused)
+                        _inputNickname.ActivateInputField();
+                    else if(_inputRegPw.isFocused)
+                        _inputRegId.ActivateInputField();
+                    else if(_inputRegPwConfirm.isFocused)
+                        _inputRegPw.ActivateInputField();
+                    else if(_inputMail.isFocused)
+                        _inputRegPwConfirm.ActivateInputField();
+                    else if(_inputPw.isFocused)
+                        _inputId.ActivateInputField();
+                }
+                // 순방향
+                else
+                {
+                    if(_inputNickname.isFocused)
+                        _inputRegId.ActivateInputField();
+                    else if(_inputRegId.isFocused)
+                        _inputRegPw.ActivateInputField();
+                    else if(_inputRegPw.isFocused)
+                        _inputRegPwConfirm.ActivateInputField();
+                    else if(_inputRegPwConfirm.isFocused)
+                        _inputMail.ActivateInputField();
+                    else if(_inputId.isFocused)
+                        _inputPw.ActivateInputField();
                 }
             }
 

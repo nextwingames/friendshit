@@ -1,8 +1,10 @@
-﻿namespace Friendshit
+﻿using Nextwin.Protocol;
+
+namespace Friendshit
 {
     namespace Protocols
     {
-        public class SendingRegisterPacket
+        public class SendingRegisterPacket:Packet
         {
             public string Nickname;
             public string Id;

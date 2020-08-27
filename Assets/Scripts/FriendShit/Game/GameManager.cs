@@ -45,11 +45,11 @@ namespace Friendshit
                 Service service;
                 switch(header.MsgType)
                 {
-                    case Protocol.Test:
-                        TestPacket testPacket = JsonManager.BytesToObject<TestPacket>(data);
-                        service = new TestService(testPacket);
-                        service.Execute();
-                        break;
+                    //case Protocol.Test:
+                    //    TestPacket testPacket = JsonManager.BytesToObject<TestPacket>(data);
+                    //    service = new TestService(testPacket);
+                    //    service.Execute();
+                    //    break;
                 }
             }
 

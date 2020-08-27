@@ -24,11 +24,9 @@ namespace Friendshit
             private InputField _inputRegPwConfirm;
             private InputField _inputMail;
 
-            public static int Focus { get; set; }
-            public const int FocusNickname = 1;
-            public const int FocusRegId = 2;
-            public const int FocusRegPw = 3;
-            public const int FocusRegPwConfirm = 4;
+            // 로그인
+            private InputField _inputId;
+            private InputField _inputPw;
 
             private void Start()
             {
@@ -42,16 +40,27 @@ namespace Friendshit
                 _inputRegPw = GameObject.Find("Reg PW InputField").GetComponent<InputField>();
                 _inputRegPwConfirm = GameObject.Find("Reg PW Confirm InputField").GetComponent<InputField>();
                 _inputMail = GameObject.Find("Mail InputField").GetComponent<InputField>();
+
+                _inputId = GameObject.Find("ID InputField").GetComponent<InputField>();
+                _inputPw = GameObject.Find("PW InputField").GetComponent<InputField>();
+                _inputId.text = "";
+                _inputPw.text = "";
             }
 
             public void OnClickLogin()
             {
-                
+                string id = _inputId.text;
+                string pw = _inputPw.text;
+
+                _networkManager.Send(Protocol.Login, new SendingLoginPacket(id, pw));
             }
 
             public void OnClickRegister()
             {
                 GameObject.Find("Register Panel").GetComponent<Animator>().Play("Open");
+                _inputId.text = "";
+                _inputPw.text = "";
+                _inputNickname.ActivateInputField();
             }
 
             public void OnClickRegisterComplete()
@@ -66,49 +75,49 @@ namespace Friendshit
                 {
                     _alertMessage.text = "Enter your nickname.";
                     _alertAnimator.Play("Open");
-                    Focus = FocusNickname;
+                    Focus.Focusing = Focus.Nickname;
                     return;
                 }
                 if(nickname.Length < 4)
                 {
                     _alertMessage.text = "The nickname is too short. The nickname must be at least 4 characters long.";
                     _alertAnimator.Play("Open");
-                    Focus = FocusNickname;
+                    Focus.Focusing = Focus.Nickname;
                     return;
                 }
                 if(id.Equals(""))
                 {
                     _alertMessage.text = "Enter your ID.";
                     _alertAnimator.Play("Open");
-                    Focus = FocusRegId;
+                    Focus.Focusing = Focus.RegId;
                     return;
                 }
                 if(id.Length < 4)
                 {
                     _alertMessage.text = "The ID is too short. The ID must be at least 4 characters long.";
                     _alertAnimator.Play("Open");
-                    Focus = FocusRegId;
+                    Focus.Focusing = Focus.RegId;
                     return;
                 }
                 if(pw.Equals(""))
                 {
                     _alertMessage.text = "Enter your password.";
                     _alertAnimator.Play("Open");
-                    Focus = FocusRegPw;
+                    Focus.Focusing = Focus.RegPw;
                     return;
                 }
                 if(pw.Length < 8)
                 {
                     _alertMessage.text = "The password is too short. The password must be at least 8 characters long.";
                     _alertAnimator.Play("Open");
-                    Focus = FocusRegPw;
+                    Focus.Focusing = Focus.RegPw;
                     return;
                 }
                 if(!pw.Equals(pwConfirm))
                 {
                     _alertMessage.text = "Check your password again.";
                     _alertAnimator.Play("Open");
-                    Focus = FocusRegPwConfirm;
+                    Focus.Focusing = Focus.RegPwConfirm;
                     return;
                 }
 
@@ -124,28 +133,34 @@ namespace Friendshit
                 _inputMail.text = "";
 
                 GameObject.Find("Register Panel").GetComponent<Animator>().Play("Close");
+                _inputId.ActivateInputField();
             }
 
             public void OnClickAlertOk()
             {
                 _alertAnimator.Play("Close");
 
-                switch(Focus)
+                switch(Focus.Focusing)
                 {
-                    case FocusNickname:
+                    case Focus.Nickname:
                         _inputNickname.ActivateInputField();
                         break;
-                    case FocusRegId:
+                    case Focus.RegId:
                         _inputRegId.ActivateInputField();
                         break;
-                    case FocusRegPw:
+                    case Focus.RegPw:
                         _inputRegPw.ActivateInputField();
                         break;
-                    case FocusRegPwConfirm:
+                    case Focus.RegPwConfirm:
                         _inputRegPwConfirm.ActivateInputField();
                         break;
+                    case Focus.Id:
+                        _inputId.ActivateInputField();
+                        break;
+                    case Focus.Pw:
+                        _inputPw.ActivateInputField();
+                        break;
                 }
-                Focus = 0;
             }
         }
     }

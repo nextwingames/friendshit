@@ -1,5 +1,6 @@
 ﻿using Friendshit.MainServer;
 using Friendshit.Protocols;
+using Nextwin.Protocol;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,9 +27,9 @@ namespace Friendshit
             private InputField _inputRegPwConfirm;
             private InputField _inputMail;
 
-            public RegisterService(ReceivingRegisterPacket packet)
+            public RegisterService(Packet packet) : base(packet)
             {
-                _receivingRegisterPacket = packet;
+                _receivingRegisterPacket = (ReceivingRegisterPacket)packet;
 
                 _alertAnimator = GameObject.Find("Alert Panel").GetComponent<Animator>();
                 _alertMessage = GameObject.Find("Alert Message").GetComponent<Text>();
@@ -46,12 +47,12 @@ namespace Friendshit
                 {
                     case RegisterFailNickname:
                         _alertMessage.text = "The Nickname is already in use.\nPlease enter another nickname.";
-                        ButtonController.Focus = ButtonController.FocusNickname;
+                        Focus.Focusing = Focus.Nickname;
                         break;
 
                     case RegisterFailId:
                         _alertMessage.text = "The ID is already in use.\nPlease enter another ID.";
-                        ButtonController.Focus = ButtonController.FocusRegId;
+                        Focus.Focusing = Focus.RegId;
                         break;
 
                     case RegisterSuccess:
