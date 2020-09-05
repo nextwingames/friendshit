@@ -9,6 +9,7 @@ using Friendshit.Services;
 using Friendshit.Protocols;
 using Nextwin.Util;
 using UnityEngine.UI;
+using System;
 
 namespace Friendshit
 {
@@ -22,6 +23,13 @@ namespace Friendshit
             private Thread _networkThread;
             private Queue<OriginPacket> _serviceQueue = new Queue<OriginPacket>();
             private object _locker = new object();
+
+            private ButtonController _buttonController;
+
+            public static int CurrentPanel { get; set; }
+            public const int LoginPanel = 0;
+            public const int RegisterPanel = 1;
+            public const int LobbyPanel = 2;
 
             // 회원가입
             [SerializeField]
@@ -41,6 +49,14 @@ namespace Friendshit
             [SerializeField]
             private InputField _inputPw;
 
+            // 채팅
+            [SerializeField]
+            private ScrollRect _lobbyChatScrollView;
+            [SerializeField]
+            private Text _lobbyChatMessages;
+            [SerializeField]
+            private InputField _lobbyChatInput;
+
             // Start is called before the first frame update
             void Start()
             {
@@ -48,6 +64,8 @@ namespace Friendshit
                 _networkManager.Connect(NetworkManager.MainPort);
 
                 _inputId.ActivateInputField();
+
+                _buttonController = GameObject.Find("Login Button").GetComponent<ButtonController>();
             }
 
             // Update is called once per frame
@@ -65,6 +83,7 @@ namespace Friendshit
 
                 Service();
                 ChangeFocus();
+                InputReturn();
             }
 
             /// <summary>
@@ -114,6 +133,12 @@ namespace Friendshit
                         service = new LoginService(packet);
                         service.Execute();
                         break;
+
+                    case Protocol.LobbyChat:
+                        packet = JsonManager.BytesToObject<ReceivingChatPacket>(data);
+                        service = new LobbyChatService(packet);
+                        service.Execute();
+                        break;
                 }
             }
 
@@ -150,6 +175,37 @@ namespace Friendshit
                     else if(_inputId.isFocused)
                         _inputPw.ActivateInputField();
                 }
+            }
+
+            private void InputReturn()
+            {
+                if(Input.GetKeyDown(KeyCode.Return))
+                {
+                    switch(CurrentPanel)
+                    {
+                        case LoginPanel:
+                            _buttonController.OnClickLogin();
+                            break;
+                        case RegisterPanel:
+                            _buttonController.OnClickRegisterComplete();
+                            break;
+                        case LobbyPanel:
+                            SendChat();
+                            break;
+                    }
+                }
+            }
+
+            private void SendChat()
+            {
+                _lobbyChatInput.ActivateInputField();
+
+                if(_lobbyChatMessages.Equals(""))
+                    return;
+
+                string message = _lobbyChatInput.text;
+                _networkManager.Send(Protocol.LobbyChat, new SendingChatPacket(PlayerInformation.Nickname, message));
+                _lobbyChatInput.text = "";
             }
 
             private void OnApplicationQuit()

@@ -52,6 +52,8 @@ namespace Friendshit
                     case LoginSuccess:
                         MainServerManager.PlayerInformation = new PlayerInformation(_receivingLoginPacket);
                         GameObject.Find("Login Panel").GetComponent<Animator>().Play("Close");
+                        GameObject.Find("Lobby Chat InputField").GetComponent<InputField>().ActivateInputField();
+                        MainServerManager.CurrentPanel = MainServerManager.LobbyPanel;
                         break;
                 }
             }

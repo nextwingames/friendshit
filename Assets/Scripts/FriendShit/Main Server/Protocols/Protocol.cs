@@ -9,6 +9,7 @@
         {
             public const int Register = 16;
             public const int Login = 17;
+            public const int LobbyChat = 18;
         }
     }
 }

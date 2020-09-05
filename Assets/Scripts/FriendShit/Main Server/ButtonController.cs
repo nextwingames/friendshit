@@ -61,6 +61,7 @@ namespace Friendshit
                 _inputId.text = "";
                 _inputPw.text = "";
                 _inputNickname.ActivateInputField();
+                MainServerManager.CurrentPanel = MainServerManager.RegisterPanel;
             }
 
             public void OnClickRegisterComplete()

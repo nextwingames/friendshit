@@ -63,6 +63,7 @@ namespace Friendshit
                         _inputRegPw.text = "";
                         _inputRegPwConfirm.text = "";
                         _inputMail.text = "";
+                        MainServerManager.CurrentPanel = MainServerManager.LoginPanel;
                         break;
                 }
                 _alertAnimator.Play("Open");
