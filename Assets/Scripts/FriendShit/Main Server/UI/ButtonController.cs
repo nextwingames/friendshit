@@ -18,15 +18,22 @@ namespace Friendshit
             private Text _alertMessage;
 
             // 회원가입
-            private InputField _inputNickname;
-            private InputField _inputRegId;
-            private InputField _inputRegPw;
-            private InputField _inputRegPwConfirm;
-            private InputField _inputMail;
+            private InputField _nicknameInput;
+            private InputField _regIdInput;
+            private InputField _regPwInput;
+            private InputField _regPwConfirmInput;
+            private InputField _mailInput;
 
             // 로그인
-            private InputField _inputId;
-            private InputField _inputPw;
+            private InputField _idInput;
+            private InputField _pwInput;
+
+            // 방 생성
+            private GameObject _createRoomPanel;
+            private Animator _createRoomPanelAnimator;
+            private InputField _roomNameInput;
+            private Dropdown _maxPeopleDropdown;
+            private int _map;
 
             private void Start()
             {
@@ -35,22 +42,27 @@ namespace Friendshit
                 _alertAnimator = GameObject.Find("Alert Panel").GetComponent<Animator>();
                 _alertMessage = GameObject.Find("Alert Message").GetComponent<Text>();
 
-                _inputNickname = GameObject.Find("Nickname InputField").GetComponent<InputField>();
-                _inputRegId = GameObject.Find("Reg ID InputField").GetComponent<InputField>();
-                _inputRegPw = GameObject.Find("Reg PW InputField").GetComponent<InputField>();
-                _inputRegPwConfirm = GameObject.Find("Reg PW Confirm InputField").GetComponent<InputField>();
-                _inputMail = GameObject.Find("Mail InputField").GetComponent<InputField>();
+                _nicknameInput = GameObject.Find("Nickname InputField").GetComponent<InputField>();
+                _regIdInput = GameObject.Find("Reg ID InputField").GetComponent<InputField>();
+                _regPwInput = GameObject.Find("Reg PW InputField").GetComponent<InputField>();
+                _regPwConfirmInput = GameObject.Find("Reg PW Confirm InputField").GetComponent<InputField>();
+                _mailInput = GameObject.Find("Mail InputField").GetComponent<InputField>();
 
-                _inputId = GameObject.Find("ID InputField").GetComponent<InputField>();
-                _inputPw = GameObject.Find("PW InputField").GetComponent<InputField>();
-                _inputId.text = "";
-                _inputPw.text = "";
+                _idInput = GameObject.Find("ID InputField").GetComponent<InputField>();
+                _pwInput = GameObject.Find("PW InputField").GetComponent<InputField>();
+                _idInput.text = "";
+                _pwInput.text = "";
+
+                _createRoomPanel = GameObject.Find("Create Room Panel");
+                _createRoomPanelAnimator = _createRoomPanel.GetComponent<Animator>();
+                _roomNameInput = GameObject.Find("Room Name InputField").GetComponent<InputField>();
+                _maxPeopleDropdown = GameObject.Find("Max People Dropdown").GetComponent<Dropdown>();
             }
 
             public void OnClickLogin()
             {
-                string id = _inputId.text;
-                string pw = _inputPw.text;
+                string id = _idInput.text;
+                string pw = _pwInput.text;
 
                 _networkManager.Send(Protocol.Login, new SendingLoginPacket(id, pw));
             }
@@ -58,19 +70,19 @@ namespace Friendshit
             public void OnClickRegister()
             {
                 GameObject.Find("Register Panel").GetComponent<Animator>().Play("Open");
-                _inputId.text = "";
-                _inputPw.text = "";
-                _inputNickname.ActivateInputField();
+                _idInput.text = "";
+                _pwInput.text = "";
+                _nicknameInput.ActivateInputField();
                 MainServerManager.CurrentPanel = MainServerManager.RegisterPanel;
             }
 
             public void OnClickRegisterComplete()
             {
-                string nickname = _inputNickname.text;
-                string id = _inputRegId.text;
-                string pw = _inputRegPw.text;
-                string pwConfirm = _inputRegPwConfirm.text;
-                string mail = _inputMail.text;
+                string nickname = _nicknameInput.text;
+                string id = _regIdInput.text;
+                string pw = _regPwInput.text;
+                string pwConfirm = _regPwConfirmInput.text;
+                string mail = _mailInput.text;
 
                 if(nickname.Equals(""))
                 {
@@ -127,14 +139,14 @@ namespace Friendshit
 
             public void OnClickRegisterCancel()
             {
-                _inputNickname.text = "";
-                _inputRegId.text = "";
-                _inputRegPw.text = "";
-                _inputRegPwConfirm.text = "";
-                _inputMail.text = "";
+                _nicknameInput.text = "";
+                _regIdInput.text = "";
+                _regPwInput.text = "";
+                _regPwConfirmInput.text = "";
+                _mailInput.text = "";
 
                 GameObject.Find("Register Panel").GetComponent<Animator>().Play("Close");
-                _inputId.ActivateInputField();
+                _idInput.ActivateInputField();
             }
 
             public void OnClickAlertOk()
@@ -144,24 +156,55 @@ namespace Friendshit
                 switch(Focus.Focusing)
                 {
                     case Focus.Nickname:
-                        _inputNickname.ActivateInputField();
+                        _nicknameInput.ActivateInputField();
                         break;
                     case Focus.RegId:
-                        _inputRegId.ActivateInputField();
+                        _regIdInput.ActivateInputField();
                         break;
                     case Focus.RegPw:
-                        _inputRegPw.ActivateInputField();
+                        _regPwInput.ActivateInputField();
                         break;
                     case Focus.RegPwConfirm:
-                        _inputRegPwConfirm.ActivateInputField();
+                        _regPwConfirmInput.ActivateInputField();
                         break;
                     case Focus.Id:
-                        _inputId.ActivateInputField();
+                        _idInput.ActivateInputField();
                         break;
                     case Focus.Pw:
-                        _inputPw.ActivateInputField();
+                        _pwInput.ActivateInputField();
                         break;
                 }
+            }
+
+            public void OnClickCreateRoom()
+            {
+                _roomNameInput.text = "";
+                _maxPeopleDropdown.value = 0;
+                _map = 0;
+                _createRoomPanelAnimator.Play("Open");
+            }
+
+            public void OnClickCreateRoomOk()
+            {
+                string roomName = _roomNameInput.text;
+                int maxPeople = _maxPeopleDropdown.value + 4;
+
+                _networkManager.Send(Protocol.CreateRoom, new SendingCreateRoomPacket(roomName, maxPeople, _map));
+            }
+
+            public void OnClickCreateRoomCancel()
+            {
+                _createRoomPanelAnimator.Play("Close");
+            }
+
+            public void OnClickEnterRoom()
+            {
+
+            }
+
+            public void OnClickRefresh()
+            {
+
             }
         }
     }

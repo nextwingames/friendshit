@@ -33,25 +33,23 @@ namespace Friendshit
 
             // 회원가입
             [SerializeField]
-            private InputField _inputNickname;
+            private InputField _nicknameInput;
             [SerializeField]
-            private InputField _inputRegId;
+            private InputField _regIdInput;
             [SerializeField]
-            private InputField _inputRegPw;
+            private InputField _regPwInput;
             [SerializeField]
-            private InputField _inputRegPwConfirm;
+            private InputField _regPwConfirmInput;
             [SerializeField]
-            private InputField _inputMail;
+            private InputField _mailInput;
 
             // 로그인
             [SerializeField]
-            private InputField _inputId;
+            private InputField _idInput;
             [SerializeField]
-            private InputField _inputPw;
+            private InputField _pwInput;
 
             // 채팅
-            [SerializeField]
-            private ScrollRect _lobbyChatScrollView;
             [SerializeField]
             private Text _lobbyChatMessages;
             [SerializeField]
@@ -63,7 +61,7 @@ namespace Friendshit
                 _networkManager = NetworkManager.Instance;
                 _networkManager.Connect(NetworkManager.MainPort);
 
-                _inputId.ActivateInputField();
+                _idInput.ActivateInputField();
 
                 _buttonController = GameObject.Find("Login Button").GetComponent<ButtonController>();
             }
@@ -118,28 +116,32 @@ namespace Friendshit
                 Header header = originPacket.Header;
                 byte[] data = originPacket.Data;
 
-                Service service;
+                Service service = null;
                 Packet packet;
                 switch(header.MsgType)
                 {
                     case Protocol.Register:
                         packet = JsonManager.BytesToObject<ReceivingRegisterPacket>(data);
                         service = new RegisterService(packet);
-                        service.Execute();
                         break;
 
                     case Protocol.Login:
                         packet = JsonManager.BytesToObject<ReceivingLoginPacket>(data);
                         service = new LoginService(packet);
-                        service.Execute();
                         break;
 
                     case Protocol.LobbyChat:
                         packet = JsonManager.BytesToObject<ReceivingChatPacket>(data);
                         service = new LobbyChatService(packet);
-                        service.Execute();
+                        break;
+
+                    case Protocol.CreateRoom:
+                        packet = JsonManager.BytesToObject<ReceivingCreateRoomPacket>(data);
+                        service = new CreateRoomService(packet);
                         break;
                 }
+                if(service != null)
+                    service.Execute();
             }
 
             private void ChangeFocus()
@@ -150,30 +152,30 @@ namespace Friendshit
                 // 역방향
                 if(Input.GetKey(KeyCode.LeftShift))
                 {
-                    if(_inputRegId.isFocused)
-                        _inputNickname.ActivateInputField();
-                    else if(_inputRegPw.isFocused)
-                        _inputRegId.ActivateInputField();
-                    else if(_inputRegPwConfirm.isFocused)
-                        _inputRegPw.ActivateInputField();
-                    else if(_inputMail.isFocused)
-                        _inputRegPwConfirm.ActivateInputField();
-                    else if(_inputPw.isFocused)
-                        _inputId.ActivateInputField();
+                    if(_regIdInput.isFocused)
+                        _nicknameInput.ActivateInputField();
+                    else if(_regPwInput.isFocused)
+                        _regIdInput.ActivateInputField();
+                    else if(_regPwConfirmInput.isFocused)
+                        _regPwInput.ActivateInputField();
+                    else if(_mailInput.isFocused)
+                        _regPwConfirmInput.ActivateInputField();
+                    else if(_pwInput.isFocused)
+                        _idInput.ActivateInputField();
                 }
                 // 순방향
                 else
                 {
-                    if(_inputNickname.isFocused)
-                        _inputRegId.ActivateInputField();
-                    else if(_inputRegId.isFocused)
-                        _inputRegPw.ActivateInputField();
-                    else if(_inputRegPw.isFocused)
-                        _inputRegPwConfirm.ActivateInputField();
-                    else if(_inputRegPwConfirm.isFocused)
-                        _inputMail.ActivateInputField();
-                    else if(_inputId.isFocused)
-                        _inputPw.ActivateInputField();
+                    if(_nicknameInput.isFocused)
+                        _regIdInput.ActivateInputField();
+                    else if(_regIdInput.isFocused)
+                        _regPwInput.ActivateInputField();
+                    else if(_regPwInput.isFocused)
+                        _regPwConfirmInput.ActivateInputField();
+                    else if(_regPwConfirmInput.isFocused)
+                        _mailInput.ActivateInputField();
+                    else if(_idInput.isFocused)
+                        _pwInput.ActivateInputField();
                 }
             }
 
