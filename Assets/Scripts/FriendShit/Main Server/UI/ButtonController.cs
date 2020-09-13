@@ -29,11 +29,11 @@ namespace Friendshit
             private InputField _pwInput;
 
             // 방 생성
-            private GameObject _createRoomPanel;
             private Animator _createRoomPanelAnimator;
             private InputField _roomNameInput;
             private Dropdown _maxPeopleDropdown;
             private int _map;
+            private Animator _lobbyPanelAnimator;
 
             private void Start()
             {
@@ -53,10 +53,10 @@ namespace Friendshit
                 _idInput.text = "";
                 _pwInput.text = "";
 
-                _createRoomPanel = GameObject.Find("Create Room Panel");
-                _createRoomPanelAnimator = _createRoomPanel.GetComponent<Animator>();
+                _createRoomPanelAnimator = GameObject.Find("Create Room Panel").GetComponent<Animator>();
                 _roomNameInput = GameObject.Find("Room Name InputField").GetComponent<InputField>();
                 _maxPeopleDropdown = GameObject.Find("Max People Dropdown").GetComponent<Dropdown>();
+                _lobbyPanelAnimator = GameObject.Find("Lobby Panel").GetComponent<Animator>();
             }
 
             public void OnClickLogin()
@@ -188,6 +188,12 @@ namespace Friendshit
             {
                 string roomName = _roomNameInput.text;
                 int maxPeople = _maxPeopleDropdown.value + 4;
+
+                if(roomName.Equals(""))
+                    return;
+
+                _createRoomPanelAnimator.Play("Close");
+                _lobbyPanelAnimator.Play("Close");
 
                 _networkManager.Send(Protocol.CreateRoom, new SendingCreateRoomPacket(roomName, maxPeople, _map));
             }

@@ -132,7 +132,7 @@ namespace Nextwin
 
                     if(json[i] == '\"')
                     {
-                        if(json[i + 1] != ':' && json[i - 1] != ':')
+                        if(json[i + 1] != ':' && json[i - 1] != ':' && json[i - 1] != '[')
                         {
                             // 필드 변수 첫 글자를 대문자로
                             pascalJson += char.ToUpper(json[i + 1]);

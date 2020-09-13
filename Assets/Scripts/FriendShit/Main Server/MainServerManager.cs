@@ -17,7 +17,7 @@ namespace Friendshit
     {
         public class MainServerManager:MonoBehaviour
         {
-            public static PlayerInformation PlayerInformation { get; set; }
+            public static Player PlayerInformation { get; set; }
 
             private NetworkManager _networkManager;
             private Thread _networkThread;
@@ -138,6 +138,11 @@ namespace Friendshit
                     case Protocol.CreateRoom:
                         packet = JsonManager.BytesToObject<ReceivingCreateRoomPacket>(data);
                         service = new CreateRoomService(packet);
+                        break;
+
+                    case Protocol.EnterRoom:
+                        packet = JsonManager.BytesToObject<ReceivingEnterRoomPacket>(data);
+                        service = new EnterRoomService(packet);
                         break;
                 }
                 if(service != null)

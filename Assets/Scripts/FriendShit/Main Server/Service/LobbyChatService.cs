@@ -29,6 +29,7 @@ namespace Friendshit
                 string message = "[" + nickname + "] " +  _receivingChatPacket.Message + "\n";
 
                 _lobbyChatMessages.text += message;
+                
                 _lobbyChatScrollView.verticalNormalizedPosition = 0;
             }
         }

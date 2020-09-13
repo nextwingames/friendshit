@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Friendshit
 {
-    public class PlayerInformation
+    public class Player
     {
         public string Id { get; }
         public string Nickname { get; }
@@ -19,7 +19,7 @@ namespace Friendshit
         private Text _silver;
         private Text _bronze;
 
-        public PlayerInformation(ReceivingLoginPacket receivingLoginPacket)
+        public Player(ReceivingLoginPacket receivingLoginPacket)
         {
             Id = receivingLoginPacket.Id;
             Nickname = receivingLoginPacket.Nickname;
