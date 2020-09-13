@@ -20,7 +20,7 @@ namespace Friendshit
             {
                 // 방 입장 요청
                 int roomId = _receivingCreateRoomPacket.Id;
-                string nickName = MainServerManager.PlayerInformation.Nickname;
+                string nickName = MainServerManager.Player.Nickname;
                 _networkManager.Send(Protocol.EnterRoom, new SendingEnterRoomPacket(roomId, nickName));
             }
         }

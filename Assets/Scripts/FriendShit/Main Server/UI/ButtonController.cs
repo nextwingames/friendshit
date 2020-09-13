@@ -1,4 +1,5 @@
-﻿using Friendshit.Protocols;
+﻿using Friendshit.Game;
+using Friendshit.Protocols;
 using Nextwin.Net;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,6 +34,9 @@ namespace Friendshit
             private InputField _roomNameInput;
             private Dropdown _maxPeopleDropdown;
             private int _map;
+
+            // 방과 로비
+            private GameObject _roomPanel;
             private Animator _lobbyPanelAnimator;
 
             private void Start()
@@ -56,6 +60,9 @@ namespace Friendshit
                 _createRoomPanelAnimator = GameObject.Find("Create Room Panel").GetComponent<Animator>();
                 _roomNameInput = GameObject.Find("Room Name InputField").GetComponent<InputField>();
                 _maxPeopleDropdown = GameObject.Find("Max People Dropdown").GetComponent<Dropdown>();
+
+
+                _roomPanel = GameObject.Find("Room Panel");
                 _lobbyPanelAnimator = GameObject.Find("Lobby Panel").GetComponent<Animator>();
             }
 
@@ -188,6 +195,7 @@ namespace Friendshit
             {
                 string roomName = _roomNameInput.text;
                 int maxPeople = _maxPeopleDropdown.value + 4;
+                string nickname = MainServerManager.Player.Nickname;
 
                 if(roomName.Equals(""))
                     return;
@@ -211,6 +219,17 @@ namespace Friendshit
             public void OnClickRefresh()
             {
 
+            }
+
+            public void OnClickExitRoom()
+            {
+                _roomPanel.GetComponent<Animator>().Play("Close");
+                RoomPanelManager roomPanelManager = _roomPanel.GetComponent<RoomPanelManager>();
+
+                int roomId = roomPanelManager.Room.Id;
+                string nickname = MainServerManager.Player.Nickname;
+
+                _networkManager.Send(Protocol.ExitRoom, new SendingExitRoomPacket(roomId, nickname));
             }
         }
     }

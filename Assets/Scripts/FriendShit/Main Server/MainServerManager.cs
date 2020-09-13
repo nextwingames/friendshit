@@ -17,7 +17,7 @@ namespace Friendshit
     {
         public class MainServerManager:MonoBehaviour
         {
-            public static Player PlayerInformation { get; set; }
+            public static Player Player { get; set; }
 
             private NetworkManager _networkManager;
             private Thread _networkThread;
@@ -211,7 +211,7 @@ namespace Friendshit
                     return;
 
                 string message = _lobbyChatInput.text;
-                _networkManager.Send(Protocol.LobbyChat, new SendingChatPacket(PlayerInformation.Nickname, message));
+                _networkManager.Send(Protocol.LobbyChat, new SendingChatPacket(Player.Nickname, message));
                 _lobbyChatInput.text = "";
             }
 

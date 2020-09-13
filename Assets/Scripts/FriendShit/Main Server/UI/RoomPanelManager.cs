@@ -25,23 +25,23 @@ namespace Friendshit
             [SerializeField]
             private Text[] _playerNicknames;
 
-            private Room _room;
+            public Room Room { get; private set; }
 
             public void SetRoom(ReceivingEnterRoomPacket receivingEnterRoomPacket)
             {
-                _room = new Room(receivingEnterRoomPacket);
+                Room = new Room(receivingEnterRoomPacket);
                 UpdateUi();
             }
 
             private void UpdateUi()
             {
-                _roomId.text = _room.Id.ToString();
-                _roomName.text = _room.Name.ToString();
+                _roomId.text = Room.Id.ToString();
+                _roomName.text = Room.Name.ToString();
 
-                _roomMaxPeopleDropdown.value = _room.MaxPeople - 4;
+                _roomMaxPeopleDropdown.value = Room.MaxPeople - 4;
                 SetMapImage();
 
-                for(int i = 0; i < _room.Headcount; i++)
+                for(int i = 0; i < Room.Headcount; i++)
                 {
                     UpdatePlayerUi(i);
                 }
@@ -55,7 +55,7 @@ namespace Friendshit
             private void UpdatePlayerUi(int index)
             {
                 //_playerImages
-                _playerNicknames[index].text = _room.Players[index];
+                _playerNicknames[index].text = Room.Players[index];
             }
         }
     }

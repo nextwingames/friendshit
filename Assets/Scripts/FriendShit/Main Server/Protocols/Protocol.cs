@@ -12,6 +12,7 @@
             public const int LobbyChat = 18;
             public const int CreateRoom = 19;
             public const int EnterRoom = 20;
+            public const int ExitRoom = 21;
         }
     }
 }

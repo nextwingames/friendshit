@@ -50,7 +50,7 @@ namespace Friendshit
                         Focus.Focusing = Focus.Pw;
                         break;
                     case LoginSuccess:
-                        MainServerManager.PlayerInformation = new Player(_receivingLoginPacket);
+                        MainServerManager.Player = new Player(_receivingLoginPacket);
                         GameObject.Find("Login Panel").GetComponent<Animator>().Play("Close");
                         GameObject.Find("Lobby Chat InputField").GetComponent<InputField>().ActivateInputField();
                         MainServerManager.CurrentPanel = MainServerManager.LobbyPanel;
