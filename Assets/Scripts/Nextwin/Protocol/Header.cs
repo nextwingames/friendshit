@@ -7,7 +7,7 @@
         /// </summary>
         public class Header
         {
-            public const int HeaderLength = 26;
+            public const int HeaderLength = 27;
 
             public int MsgType;
             public int Length;

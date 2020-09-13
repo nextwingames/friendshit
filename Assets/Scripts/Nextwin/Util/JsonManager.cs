@@ -49,6 +49,7 @@ namespace Nextwin
 
             private static T JsonToObject<T>(string json)
             {
+                Debug.Log(json);
                 return JsonUtility.FromJson<T>(json);
             }
 
@@ -67,13 +68,15 @@ namespace Nextwin
             }
 
             /// <summary>
-            /// 헤더의 json 길이를 26으로 맞춤
+            /// 헤더의 json 길이를 27으로 맞춤
             /// </summary>
             /// <param name="header"></param>
             /// <param name="jsonHeader"></param>
             public static void SetHeaderLength(Header header, ref string jsonHeader)
             {
                 if(header.MsgType < 10)
+                    jsonHeader += ' ';
+                if(header.Length < 100)
                     jsonHeader += ' ';
                 if(header.Length < 10)
                     jsonHeader += ' ';

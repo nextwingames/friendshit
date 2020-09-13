@@ -30,5 +30,10 @@ namespace Friendshit
             Status = Waiting;
             Players = receivingEnterRoomPacket.Players;
         }
+
+        //public Room(ReceivingLobbyPacket receivingLobbyPacket)
+        //{
+
+        //}
     }
 }

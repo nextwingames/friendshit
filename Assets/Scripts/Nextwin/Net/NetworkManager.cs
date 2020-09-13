@@ -4,12 +4,8 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
-using System.Threading;
-using TMPro;
 using Nextwin.Protocol;
 using Nextwin.Util;
-using System.Text;
-using UnityEngine.Apple.TV;
 
 namespace Nextwin
 {

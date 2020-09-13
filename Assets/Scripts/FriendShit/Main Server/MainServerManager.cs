@@ -130,6 +130,11 @@ namespace Friendshit
                         service = new LoginService(packet);
                         break;
 
+                    case Protocol.Lobby:
+                        packet = JsonManager.BytesToObject<ReceivingLobbyPacket>(data);
+                        service = new LobbyService(packet);
+                        break;
+
                     case Protocol.LobbyChat:
                         packet = JsonManager.BytesToObject<ReceivingChatPacket>(data);
                         service = new LobbyChatService(packet);

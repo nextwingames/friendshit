@@ -154,6 +154,8 @@ namespace Friendshit
 
                 GameObject.Find("Register Panel").GetComponent<Animator>().Play("Close");
                 _idInput.ActivateInputField();
+
+                MainServerManager.CurrentPanel = MainServerManager.LoginPanel;
             }
 
             public void OnClickAlertOk()
